@@ -1,0 +1,39 @@
+*&---------------------------------------------------------------------*
+*& Report  ZMN02
+*& Select Data
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+
+REPORT zmn02.
+*&---------------------------------------------------------------------*
+*& GLOBAL VARIABLE
+*&---------------------------------------------------------------------*
+TYPES : BEGIN OF ty_header,
+          matkl LIKE mara-matkl, "Material Group"
+          matnr LIKE mara-matnr, "Materian Number"
+        END OF ty_header.
+
+* Internal Table Declaration
+DATA : gi_header TYPE STANDARD TABLE OF ty_header WITH HEADER LINE.
+
+* Input Selection Screen
+PARAMETERS : pa_matkl LIKE mara-matkl DEFAULT '001'.
+
+*&---------------------------------------------------------------------*
+*& MAIN PROGRAM
+*& Execute after Input Screen
+*&---------------------------------------------------------------------*
+SELECT matnr matkl
+  INTO CORRESPONDING FIELDS OF TABLE gi_header
+FROM mara
+WHERE
+  matkl = pa_matkl.
+
+* Display data to screen
+LOOP AT gi_header.
+  WRITE :  / '|' NO-GAP, (9) gi_header-matkl CENTERED,
+             '|' NO-GAP, (18) gi_header-matnr,
+             '|' NO-GAP.
+ENDLOOP.
